@@ -1,0 +1,12 @@
+[VPN Connection]
+name=novpn
+service=org.freedesktop.NetworkManager.Novpn
+program=@LIBEXECDIR@/nm-novpn-service
+supports-multiple-connections=false
+
+[libnm]
+plugin=libnm-novpn-editor-plugin.so
+
+[GNOME]
+auth-dialog=@LIBEXECDIR@/nm-novpn-auth-dialog
+supports-external-ui-mode=true
