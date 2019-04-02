@@ -216,7 +216,7 @@ static void
 got_secrets (GKeyFile *keyfile, gpointer user_data)
 {
 	g_auto(GStrv) groups = g_key_file_get_groups (keyfile, NULL);
-	g_autofree gchar *value = NULL;
+	gchar *value = NULL;
 	int i;
 
 	for (i = 1; groups[i] != NULL; i++) {
