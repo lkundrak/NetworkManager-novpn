@@ -209,7 +209,13 @@ dialog_from_io_channel (GIOChannel *input,
 		}
 	}
 
-	return g_object_ref_sink (dialog);
+	g_object_ref_sink (dialog);
+	if (dialog_data->passwords == 0) {
+		g_object_unref (dialog);
+		return NULL;
+	}
+
+	return dialog;
 }
 
 static void
@@ -245,10 +251,12 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	dialog = dialog_from_io_channel (input, got_secrets, NULL, &error);
-	if (!dialog) {
+	if (error) {
 		g_printerr ("Error: %s\n", error->message);
 		return EXIT_FAILURE;
 	}
+	if (!dialog)
+		return EXIT_SUCCESS;
 
 	if (!nma_vpn_password_dialog_run_and_block (NMA_VPN_PASSWORD_DIALOG (dialog)))
 		return EXIT_FAILURE;
