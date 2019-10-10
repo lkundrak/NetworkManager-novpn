@@ -49,7 +49,7 @@ shared_library('nm-novpn-editor-plugin',
 
 shared_library('nm-novpn-editor',
 	'nm-novpn-editor.c',
-	gnome.compile_resources('nm-novpn-resources', 'nm-novpn.gresource.xml'),
+	gnome.compile_resources('nm-novpn-resources', 'nm-novpn.gresource.xml', source_dir: 'gtk3'),
 	dependencies: [glib2, libnm, libnma, gtk3],
 	c_args: extra_args,
 	install: true,
@@ -89,3 +89,22 @@ executable('run-vpn',
 	'run-vpn.c',
 	dependencies: [glib2, libnm, gtk3],
 	c_args: extra_args)
+
+enable_gtk4 = get_option('gtk4')
+if enable_gtk4
+	gtk4 = dependency('gtk4', version: '>= 3.96')
+	libnma_gtk4 = dependency('libnma-gtk4')
+
+	shared_library('nma-gtk4-novpn-editor',
+		'nm-novpn-editor.c',
+		gnome.compile_resources('nma-gtk4-novpn-resources', 'nm-novpn.gresource.xml', source_dir: 'gtk4'),
+		dependencies: [glib2, libnm, libnma_gtk4, gtk4],
+		c_args: extra_args,
+		install: true,
+		install_dir: join_paths(get_option('libdir'), 'NetworkManager'))
+
+	executable('run-vpn-gtk4',
+		'run-vpn.c',
+		dependencies: [glib2, libnm, gtk4],
+		c_args: extra_args)
+endif

@@ -49,7 +49,12 @@ main (int argc, char *argv[])
 	g_autoptr(GError) error = NULL;
 	g_autoptr(NMConnection) connection = NULL;
 
+#if GTK_CHECK_VERSION(3,90,0)
+	gtk_init ();
+#else
 	gtk_init (&argc, &argv);
+#endif
+
 	if (argc != 2) {
 		g_printerr ("Usage: %s libnm-vpn-plugin-<name>.so\n", argv[0]);
 		return EXIT_FAILURE;

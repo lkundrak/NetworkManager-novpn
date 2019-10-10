@@ -66,13 +66,18 @@ phdr_cb (struct dl_phdr_info *info,
          void *data)
 {
 	char **editor_path = data;
+	const char *basename;
 	g_autofree char *dirname = NULL;
 
 	if (!g_str_has_suffix (info->dlpi_name, "libnm-novpn-editor-plugin.so"))
 		return 0;
 
 	dirname = g_path_get_dirname (info->dlpi_name);
-	*editor_path = g_build_filename (dirname, "libnm-novpn-editor.so", NULL);
+	if (dlsym (RTLD_DEFAULT, "gtk_box_layout_new"))
+		basename = "libnma-gtk4-novpn-editor.so";
+	else
+		basename = "libnm-novpn-editor.so";
+	*editor_path = g_build_filename (dirname, basename, NULL);
 
 	return 1;
 }

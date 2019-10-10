@@ -24,12 +24,17 @@
 #include <libnma/nma-ui-utils.h>
 #include <gtk/gtk.h>
 
+#if !GTK_CHECK_VERSION(3,96,0)
+#define gtk_editable_set_text(editable,text)	gtk_entry_set_text(GTK_ENTRY(editable), (text))
+#define gtk_editable_get_text(editable)		gtk_entry_get_text(GTK_ENTRY(editable))
+#endif
+
 struct _NMNovpnEditor {
 	GtkBox parent;
 
-	GtkEntry *password_entry;
-	GtkEntry *username_entry;
-	GtkEntry *gateway_entry;
+	GtkEditable *password_entry;
+	GtkEditable *username_entry;
+	GtkEditable *gateway_entry;
 	NMACertChooser *ca_cert_chooser;
 	GtkSizeGroup *labels;
 };
@@ -65,9 +70,9 @@ update_connection (NMVpnEditor *editor,
 	g_autofree gchar *ca_cert_chooser = NULL;
 	NMSettingSecretFlags password_flags = NM_SETTING_SECRET_FLAG_NONE;
 
-	gateway = gtk_entry_get_text (self->gateway_entry);
-	username = gtk_entry_get_text (self->username_entry);
-	password = gtk_entry_get_text (self->password_entry);
+	gateway = gtk_editable_get_text (self->gateway_entry);
+	username = gtk_editable_get_text (self->username_entry);
+	password = gtk_editable_get_text (self->password_entry);
 	password_flags = nma_utils_menu_to_secret_flags (GTK_WIDGET (self->password_entry));
 	ca_cert_chooser = nma_cert_chooser_get_cert_uri (self->ca_cert_chooser);
 
@@ -137,7 +142,7 @@ nm_vpn_editor_factory_novpn (NMVpnEditorPlugin *editor_plugin,
 	g_return_val_if_fail (!error || !*error, NULL);
 
 	self = g_object_new (NM_TYPE_NOVPN_EDITOR, NULL);
-	gtk_entry_set_text (self->gateway_entry, "novpn.example.com");
+	gtk_editable_set_text (self->gateway_entry, "novpn.example.com");
 	nm_connection_dump (connection);
 
 	setting_vpn = nm_connection_get_setting_vpn (connection);
@@ -154,11 +159,11 @@ nm_vpn_editor_factory_novpn (NMVpnEditorPlugin *editor_plugin,
 	ca_cert = nm_setting_vpn_get_data_item (setting_vpn, "ca-cert");
 
 	if (gateway && gateway[0] != '\0')
-		gtk_entry_set_text (self->gateway_entry, gateway);
+		gtk_editable_set_text (self->gateway_entry, gateway);
 	if (username && username[0] != '\0')
-		gtk_entry_set_text (self->username_entry, username);
+		gtk_editable_set_text (self->username_entry, username);
 	if (password && password[0] != '\0')
-		gtk_entry_set_text (self->password_entry, password);
+		gtk_editable_set_text (self->password_entry, password);
 	nma_utils_setup_password_storage (GTK_WIDGET (self->password_entry),
 	                                  password_flags,
 	                                  NULL, NULL, TRUE, FALSE);

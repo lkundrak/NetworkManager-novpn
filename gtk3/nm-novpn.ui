@@ -6,7 +6,10 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="valign">start</property>
-    <property name="border_width">12</property>
+    <property name="margin_start">12</property>
+    <property name="margin_end">12</property>
+    <property name="margin_top">12</property>
+    <property name="margin_bottom">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
     <child>
@@ -100,11 +103,11 @@
     </child>
     <child>
       <object class="NMACertChooser" id="ca_cert_chooser">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="title" translatable="yes">CA</property>
-                            <property name="flags">5</property>
-                          </object>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="title" translatable="yes">CA</property>
+        <property name="flags">5</property>
+      </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
